@@ -20,7 +20,7 @@ var cities = [
   ];
   
   // An array which will be used to store created cityMarkers
-  var cityMarkers = [];
+  var goldCityMarkers = [];
   
   for (var i = 0; i < cities.length; i++) {
     // loop through the cities array, create a new marker, push it to the cityMarkers array
@@ -60,10 +60,10 @@ var cities = [
   
   // Create map object and set layers
   // Center at Lisbon Portugal
-  var myMap = L.map("map", {
+  var myMap = L.map("mapmedals", {
     center: [38.7223, -9.1393],
     zoom: 3,
-    layers: [RegMap, cityLayer]
+    layers: [RegMap, cityLayerGold]
   });
   
   // Pass our map layers into our layer control
