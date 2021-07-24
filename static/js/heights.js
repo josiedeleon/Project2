@@ -77,6 +77,8 @@ d3.csv("data/combined_height_avg.csv").then(function(hData) {
     .classed("axis", true)
     .attr("transform", `translate(0, ${chartHeight})`)
     .call(bottomAxis);
+
+    
 }).catch(function(error) {
   console.log(error);
 });
