@@ -109,7 +109,7 @@ d3.csv("/data/combined_height_avg.csv").then(function(hData) {
     .style("fill", "none")
     .classed("line orange", true);
 
-     //Append circles
+  //Append circles
      var circlesGroup = chartGroup.selectAll("circle")
      .data(hData)
      .enter()
@@ -121,6 +121,7 @@ d3.csv("/data/combined_height_avg.csv").then(function(hData) {
      .attr("stroke-width", "0.5")
      .attr("stroke", "black");
 
+//Axis Titles
     chartGroup.append("text")
     .attr("transform", `translate(${width / 2}, ${height + margin.top + 13})`)
     .attr("text-anchor", "middle")
