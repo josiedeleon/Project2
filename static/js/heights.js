@@ -1,84 +1,124 @@
-// Define SVG area dimensions
-var svgWidth = 600;
-var svgHeight = 400;
+// Set up chart
+var svgWidth = 560;
+var svgHeight = 500;
 
-// Define the chart's margins as an object
 var margin = {
-  top: 60,
-  right: 60,
+  top: 20,
+  right: 40,
   bottom: 60,
-  left: 60
+  left: 50
 };
 
-// Define dimensions of the chart area
-var chartWidth = svgWidth - margin.left - margin.right;
-var chartHeight = svgHeight - margin.top - margin.bottom;
+var width = svgWidth - margin.left - margin.right;
+var height = svgHeight - margin.top - margin.bottom;
 
-// Select body, append SVG area to it, and set its dimensions
-var svg = d3.select("body")
+// SVG wrapper
+// append an SVG group that will hold our chart,
+// and shift the latter by left and top margins.
+
+var svg = d3
+  .select("body")
   .append("svg")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
 
-// Append a group area, then set its margins
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-// Configure a parseTime function which will return a new Date object from a string
-var parseTime = d3.timeParse("%Y");
+// Import data from the combined_height_avg.csv file
+d3.csv("/data/combined_height_avg.csv").then(function(hData) {
 
-// Load data from combined_height_avg.csv
-d3.csv("data/combined_height_avg.csv").then(function(hData) {
+// Parse and convert to year values
+  var parseTime = d3.timeParse("%Y");
 
-  // Print the height data
-  console.log(hData);
-
-  // Format the Year and Height value to a number
+  // Format the data
   hData.forEach(function(data) {
     data.Year = parseTime(data.Year);
+    console.log(data.Year)
     data.Male_Height = +data.Male_Height;
+    data.Female_Height = +data.Female_Height;
   });
 
-  // Configure a time scale
-  // d3.extent returns the an array containing the min and max values for the property specified
+  // Set up the scales for the chart
   var xTimeScale = d3.scaleTime()
-    .domain(d3.extent(hData, data => data.Year))
-    .range([0, chartWidth]);
+    .domain(d3.extent(hData, d => d.Year))
+    .range([0, width]);
 
-  // Configure a linear scale with a range between the chartHeight and 0
-  var yLinearScale = d3.scaleLinear()
-    .domain([170, d3.max(hData, data => data.Male_Height)])
-    .range([chartHeight, 0]);
+  var yLinearScale = d3.scaleLinear().range([height, 100]);
 
-  // Create two new functions passing the scales in as arguments
-  // These will be used to create the chart's axes
-  var bottomAxis = d3.axisBottom(xTimeScale);
+  // Determine max y value, the max of the Male_Height data
+  var maleMax = d3.max(hData, d => d.Male_Height);
+
+  // find the max of the Female_Height data
+  var femaleMax = d3.max(hData, d => d.Female_Height);
+
+  // var yMax = maleMax > femaleMax ? femaleMax : maleMax;
+  var yMax;
+  if (maleMax > femaleMax) {
+    yMax = maleMax;
+  }
+  else {
+    yMax = femaleMax;
+  }
+
+  // Use the yMax value to set the yLinearScale domain
+  yLinearScale.domain([160, yMax]);
+
+  // Set up the axes
+  var bottomAxis = d3.axisBottom(xTimeScale).tickFormat(d3.timeFormat("%Y"));
   var leftAxis = d3.axisLeft(yLinearScale);
 
-  // Configure a line function which will plot the x and y coordinates using our scales
-  var drawLine = d3.line()
-    .x(data => xTimeScale(data.Year))
-    .y(data => yLinearScale(data.Male_Height));
-
-  // Append an SVG path and plot its points using the line function
-  chartGroup.append("path")
-    // The drawLine function returns the instructions for creating the line for hData
-    .attr("d", drawLine(hData))
-    .classed("line", true);
-
-  // Append an SVG group element to the chartGroup, create the left axis inside of it
+  // Append the axes to the chartGroup
+  // Add x-axis
   chartGroup.append("g")
-    .classed("axis", true)
-    .call(leftAxis);
-
-  // Append an SVG group element to the chartGroup, create the bottom axis inside of it
-  // Translate the bottom axis to the bottom of the page
-  chartGroup.append("g")
-    .classed("axis", true)
-    .attr("transform", `translate(0, ${chartHeight})`)
+    .attr("transform", `translate(0, ${height})`)
     .call(bottomAxis);
 
-    
+  // Add y-axis
+  chartGroup.append("g").call(leftAxis);
+
+  // Set up two line generators and append two SVG paths
+
+  // Line generator for Male_Height data
+  var line1 = d3.line()
+    .x(d => xTimeScale(d.Year))
+    .y(d => yLinearScale(d.Male_Height));
+
+  // Line generator for Female_Height data
+  var line2 = d3.line()
+    .x(d => xTimeScale(d.Year))
+    .y(d => yLinearScale(d.Female_Height));
+
+  // Append a path for line1
+  chartGroup
+    .append("path")
+    .attr("d", line1(hData))
+    .style("stroke", "blue")
+    .style("stroke-width",2)
+    .style("fill", "none")
+    .classed("line green", true);
+
+  // Append a path for line2
+  chartGroup
+    .data([hData])
+    .append("path")
+    .attr("d", line2)
+    .style("stroke", "purple")
+    .style("stroke-width",2)
+    .style("fill", "none")
+    .classed("line orange", true);
+
+  // Title for Chart
+    chartGroup.append("text")
+    .attr("transform", `translate(${width / 2}, ${height + margin.top + 37})`)
+    .attr("text-anchor", "middle")
+    .attr("font-size", "16px")
+    .attr("fill", "Black")
+    .text("Avg Athlete Height (cm)");
+
 }).catch(function(error) {
   console.log(error);
 });
+
+
+  
