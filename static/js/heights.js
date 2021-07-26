@@ -17,7 +17,7 @@ var height = svgHeight - margin.top - margin.bottom;
 // and shift the latter by left and top margins.
 
 var svg = d3
-  .select("body")
+  .select("#heights")
   .append("svg")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
@@ -60,6 +60,7 @@ d3.csv("/data/combined_height_avg.csv").then(function(hData) {
   else {
     yMax = femaleMax;
   }
+
 
   // Use the yMax value to set the yLinearScale domain
   yLinearScale.domain([160, yMax]);
@@ -108,13 +109,33 @@ d3.csv("/data/combined_height_avg.csv").then(function(hData) {
     .style("fill", "none")
     .classed("line orange", true);
 
-  // Title for Chart
+     //Append circles
+     var circlesGroup = chartGroup.selectAll("circle")
+     .data(hData)
+     .enter()
+     .append("circle")
+     .attr("cx", d => xTimeScale(d.Year))
+     .attr("cy", d => yLinearScale(d.Male_Height))
+     .attr("r", "3")
+     .attr("fill", "yellow")
+     .attr("stroke-width", "0.5")
+     .attr("stroke", "black");
+
     chartGroup.append("text")
-    .attr("transform", `translate(${width / 2}, ${height + margin.top + 37})`)
+    .attr("transform", `translate(${width / 2}, ${height + margin.top + 13})`)
     .attr("text-anchor", "middle")
-    .attr("font-size", "16px")
-    .attr("fill", "Black")
-    .text("Avg Athlete Height (cm)");
+    .attr("font-size", "18px")
+    .attr("fill", "black")
+    .text("Year");
+
+    chartGroup.append("text")
+    .attr("y", 0 - ((margin.left /2) + 10))
+    .attr("x", 0 - (height / 2))
+    .attr("text-anchor", "middle")
+    .attr("font-size", "14px")
+    .attr("fill", "black")
+    .attr("transform", "rotate(-90)")
+    .text("Height (cm)");
 
 }).catch(function(error) {
   console.log(error);
