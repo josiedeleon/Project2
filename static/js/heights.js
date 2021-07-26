@@ -138,6 +138,30 @@ d3.csv("/data/combined_height_avg.csv").then(function(hData) {
     .attr("transform", "rotate(-90)")
     .text("Height (cm)");
 
+ // Date formatter to display years nicely
+ var dateFormatter = d3.timeFormat("%Y");
+
+ // Step 1: Initialize Tooltip
+ var toolTip = d3.tip()
+ .attr("class", "tooltip")
+ .offset([80, -60])
+ .html(function(d) {
+   return (`<strong><h5>${dateFormatter(d.Year)}<strong><hr>${d.Male_Height}
+   cm`);
+ });
+
+// Step 2: Create the tooltip in chartGroup.
+chartGroup.call(toolTip);
+
+// Step 3: Create "mouseover" event listener to display tooltip
+circlesGroup.on("mouseover", function(d) {
+ toolTip.show(d, this);
+})
+// Step 4: Create "mouseout" event listener to hide tooltip
+ .on("mouseout", function(d) {
+   toolTip.hide(d);
+ });
+
 }).catch(function(error) {
   console.log(error);
 });
