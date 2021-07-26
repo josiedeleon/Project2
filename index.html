@@ -26,37 +26,6 @@ integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw
 <link rel="stylesheet" type="text/css" href="./static/css/style.css">
 </head>
 
-<!-- Navigation Dropdown Menu to Visualization Pages -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-          
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class=" nav navbar-nav ml-auto">  
-        <li class="nav-item dropdown">
-        <h1 class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Plots
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <h4 class="dropdown-item" href="./mapmedals.html">World Map Medals</h4>
-          <h4 class="dropdown-item" href="./sportpiechart.html">Sports Pie Chart</h4>
-          <h4 class="dropdown-item" href="./avgheight.html">Athlete Avg Height</h4>
-          <h4 class="dropdown-item" href="./participants.html"> Participants</h4>
-          <div class="dropdown-divider"></div>
-          <h4 class="dropdown-item" href="./index.html">Back to Homepage</h4>
-        </div>
-      </li>
-  
-      <li class="nav-item">
-        <h1 class="nav-link" href="./regions_events.html">Data</a>
-      </li>
-
-    </ul>
-                
-  </div>
-</nav>
 <body>
 <!--Dashboard Title-->
   <div class="container">
@@ -84,14 +53,16 @@ integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw
       </div>
       
       <div class="row"></div>
-      <div class="col-lg-6" style="background-color:green;">
-        <h3>Avg Height:</h3>
-        <div id="sportpiechart"style="width: 800px; height:400px"></div>
+      <div class="col-lg-6">
+        <h3>Male vs Female Height Overtime:</h3>
+        <div id="heights"style="width: 800px; height:400px"></div>
       </div>
+
       <div class="col-lg-6" style="background-color:pink;">
         <h3>Sports Pie Chart:</h3>
         <div id="sportspiechart"></div>
       </div>
+      
     </div>
     <div class="row"></div>
       <div class="col-lg-12" style="background-color:orange;">
@@ -100,8 +71,6 @@ integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw
       </div>
     </div>
   </div>
-
-  
 
 
 </div><br><br>
@@ -121,7 +90,6 @@ integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw
 </div>
  
 </div>
-
 
 <!-- Plotly JavaScript -->
 <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
