@@ -1,10 +1,11 @@
 // set the dimensions and margins of the graph
-var margin = {top: 10, right: 30, bottom: 30, left: 40},
-    width = 460 - margin.left - margin.right,
+var margin = {top: 10, right: 30, bottom: 20, left: 50},
+    width = 6000 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
+
 // append the svg object to the body of the page
-var svg = d3.select("#my_dataviz")
+var svg = d3.select("#participants")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -12,131 +13,108 @@ var svg = d3.select("#my_dataviz")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
-// get the data
-d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_doubleHist.csv", function(data) {
 
-  // X axis: scale and draw:
-  var x = d3.scaleLinear()
-      .domain([-4,9])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
-      .range([0, width]);
+// Parse the Data
+d3.csv("/data/country_medal.csv").then(function(data) {
+
+ var subgroups2 = data.columns.slice(2, 5)
+ console.log(subgroups2)
+
+  // List of groups = species here = value of the first column called group -> I show them on the X axis
+  var groups = d3.map(data, function(d){return(d.NOC)}).keys()
+
+console.log("hi")
+  // Add X axis
+  var x = d3.scaleBand()
+      .domain(groups)
+      .range([0, width])
+      .padding([0.2])
   svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x).tickSizeOuter(0));
 
-  // set the parameters for the histogram
-  var histogram = d3.histogram()
-      .value(function(d) { return +d.value; })   // I need to give the vector of value
-      .domain(x.domain())  // then the domain of the graphic
-      .thresholds(x.ticks(40)); // then the numbers of bins
 
-  // And apply twice this function to data to get the bins.
-  var bins1 = histogram(data.filter( function(d){return d.type === "variable 1"} ));
-  var bins2 = histogram(data.filter( function(d){return d.type === "variable 2"} ));
-
-  // Y axis: scale and draw:
+  // Add Y axis
   var y = d3.scaleLinear()
-      .range([height, 0]);
-      y.domain([0, d3.max(bins1, function(d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
+    .domain([0, 100])
+    .range([ height, 0 ]);
   svg.append("g")
-      .call(d3.axisLeft(y));
+    .call(d3.axisLeft(y));
 
-  // append the bars for series 1
-  svg.selectAll("rect")
-      .data(bins1)
-      .enter()
-      .append("rect")
-        .attr("x", 1)
-        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
-        .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
-        .attr("height", function(d) { return height - y(d.length); })
-        .style("fill", "#69b3a2")
-        .style("opacity", 0.6)
+  // color palette = one color per subgroup
+  var color = d3.scaleOrdinal()
+    .domain(subgroups2)
+    .range(['#D4AF37','#C0C0C0','#cd7f32'])
 
-  // append the bars for series 2
-  svg.selectAll("rect2")
-      .data(bins2)
-      .enter()
-      .append("rect")
-        .attr("x", 1)
-        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
-        .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
-        .attr("height", function(d) { return height - y(d.length); })
-        .style("fill", "#404080")
-        .style("opacity", 0.6)
+  // Normalize the data -> sum of each group must be 100!
+  
+  dataNormalized = []
+  data.forEach(function(d){
+    // Compute the total
+    tot = 0
+    for (i in subgroups2){ name=subgroups2[i] ; tot += +d[name] }
+    // Now normalize
+    for (i in subgroups2){ name=subgroups2[i] ; d[name] = d[name] / tot * 100}
+  })
 
-  // Handmade legend
-  svg.append("circle").attr("cx",300).attr("cy",30).attr("r", 6).style("fill", "#69b3a2")
-  svg.append("circle").attr("cx",300).attr("cy",60).attr("r", 6).style("fill", "#404080")
-  svg.append("text").attr("x", 320).attr("y", 30).text("variable A").style("font-size", "15px").attr("alignment-baseline","middle")
-  svg.append("text").attr("x", 320).attr("y", 60).text("variable B").style("font-size", "15px").attr("alignment-baseline","middle")
-// set the dimensions and margins of the graph
-var margin = {top: 10, right: 30, bottom: 30, left: 40},
-    width = 460 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
 
-// append the svg object to the body of the page
-var svg = d3.select("#my_dataviz")
-  .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
 
-// get the data
-d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_doubleHist.csv", function(data) {
+  //stack the data? --> stack per subgroup
+  var stackedData = d3.stack()
+    .keys(subgroups2)
+    (data)
 
-  // X axis: scale and draw:
-  var x = d3.scaleLinear()
-      .domain([-4,9])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
-      .range([0, width]);
+
+  // ----------------
+  // Create a tooltip
+  // ----------------
+  var tooltip = d3.select("#participants")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "1px")
+    .style("border-radius", "5px")
+    .style("padding", "10px")
+
+  // Three function that change the tooltip when user hover / move / leave a cell
+  var mouseover = function(d) {
+    var subgroupName = d3.select(this.parentNode).datum().key;
+    var subgroupValue = d.data[subgroupName];
+    tooltip
+        .html("subgroup: " + subgroupName + "<br>" + "Value: " + subgroupValue)
+        .style("opacity", 1)
+  }
+  var mousemove = function(d) {
+    tooltip
+      .style("left", (d3.mouse(this)[0]+90) + "px") // It is important to put the +90: other wise the tooltip is exactly where the point is an it creates a weird effect
+      .style("top", (d3.mouse(this)[1]) + "px")
+  }
+  var mouseleave = function(d) {
+    tooltip
+      .style("opacity", 0)
+  }
+
+
+  // Show the bars
   svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
+    .selectAll("g")
+    // Enter in the stack data = loop key per key = group per group
+    .data(stackedData)
+    .enter().append("g")
+      .attr("fill", function(d) { return color(d.key); })
+      .selectAll("rect")
+      // enter a second time = loop subgroup per subgroup to add all rectangles
+      .data(function(d) { return d; })
+      .enter().append("rect")
+        .attr("x", function(d) { return x(d.data.NOC); })
+        .attr("y", function(d) { return y(d[1]); })
+        .attr("height", function(d) { return y(d[0]) - y(d[1]); })
+        .attr("width",x.bandwidth())
+      .on("mouseover", mouseover)
+      .on("mousemove", mousemove)
+      .on("mouseleave", mouseleave)
 
-  // set the parameters for the histogram
-  var histogram = d3.histogram()
-      .value(function(d) { return +d.value; })   // I need to give the vector of value
-      .domain(x.domain())  // then the domain of the graphic
-      .thresholds(x.ticks(40)); // then the numbers of bins
+})
 
-  // And apply twice this function to data to get the bins.
-  var bins1 = histogram(data.filter( function(d){return d.type === "variable 1"} ));
-  var bins2 = histogram(data.filter( function(d){return d.type === "variable 2"} ));
-
-  // Y axis: scale and draw:
-  var y = d3.scaleLinear()
-      .range([height, 0]);
-      y.domain([0, d3.max(bins1, function(d) { return d.length; })]);   // d3.hist has to be called before the Y axis obviously
-  svg.append("g")
-      .call(d3.axisLeft(y));
-
-  // append the bars for series 1
-  svg.selectAll("rect")
-      .data(bins1)
-      .enter()
-      .append("rect")
-        .attr("x", 1)
-        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
-        .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
-        .attr("height", function(d) { return height - y(d.length); })
-        .style("fill", "#69b3a2")
-        .style("opacity", 0.6)
-
-  // append the bars for series 2
-  svg.selectAll("rect2")
-      .data(bins2)
-      .enter()
-      .append("rect")
-        .attr("x", 1)
-        .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
-        .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
-        .attr("height", function(d) { return height - y(d.length); })
-        .style("fill", "#404080")
-        .style("opacity", 0.6)
-
-  // Handmade legend
-  svg.append("circle").attr("cx",300).attr("cy",30).attr("r", 6).style("fill", "#69b3a2")
-  svg.append("circle").attr("cx",300).attr("cy",60).attr("r", 6).style("fill", "#404080")
-  svg.append("text").attr("x", 320).attr("y", 30).text("variable A").style("font-size", "15px").attr("alignment-baseline","middle")
-  svg.append("text").attr("x", 320).attr("y", 60).text("variable B").style("font-size", "15px").attr("alignment-baseline","middle")

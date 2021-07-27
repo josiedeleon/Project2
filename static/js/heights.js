@@ -34,7 +34,7 @@ d3.csv("/data/combined_height_avg.csv").then(function(hData) {
   // Format the data
   hData.forEach(function(data) {
     data.Year = parseTime(data.Year);
-    console.log(data.Year)
+    
     data.Male_Height = +data.Male_Height;
     data.Female_Height = +data.Female_Height;
   });
