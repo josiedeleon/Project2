@@ -9,7 +9,7 @@ var svg = d3.select("#participants")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-    .attr("viewBox", [20,20, width, height])
+    .attr("viewBox", [0,40, width, height])
   .append("g")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")")
@@ -38,6 +38,13 @@ console.log("hi")
     .attr("transform", "translate(0," + height + ")")
     .call(d3.axisBottom(x).tickSizeOuter(0));
 
+  svg.append("text")             
+      .attr("transform",
+            "translate(" + (width/10) + " ," + 
+                           (height + margin.top + 20) + ")")
+      .style("text-anchor", "middle")
+      .text("Country");
+
 
   // Add Y axis
   var y = d3.scaleLinear()
@@ -45,6 +52,14 @@ console.log("hi")
     .range([ height, 0 ]);
   svg.append("g")
     .call(d3.axisLeft(y));
+
+  svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Percentage of Medals"); 
 
   // color palette = one color per subgroup
   var color = d3.scaleOrdinal()
@@ -120,6 +135,9 @@ console.log("hi")
       .on("mouseover", mouseover)
       .on("mousemove", mousemove)
       .on("mouseleave", mouseleave)
+
+  
+
 
 })
 
