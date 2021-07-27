@@ -1,6 +1,6 @@
 // set the dimensions and margins of the graph
 var margin = {top: 10, right: 30, bottom: 20, left: 50},
-    width = 6000 - margin.left - margin.right,
+    width = 8000 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
 
@@ -11,7 +11,11 @@ var svg = d3.select("#participants")
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform",
-          "translate(" + margin.left + "," + margin.top + ")");
+          "translate(" + margin.left + "," + margin.top + ")")
+  .call(d3.zoom().on("zoom", function () {
+    svg.attr("transform", d3.event.transform)
+ }))
+ .append("g");
 
 
 // Parse the Data
