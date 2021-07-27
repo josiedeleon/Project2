@@ -9,6 +9,7 @@ var svg = d3.select("#participants")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
+    .attr("viewBox", [20,20, width, height])
   .append("g")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")")
@@ -87,7 +88,7 @@ console.log("hi")
     var subgroupName = d3.select(this.parentNode).datum().key;
     var subgroupValue = d.data[subgroupName];
     tooltip
-        .html("subgroup: " + subgroupName + "<br>" + "Value: " + subgroupValue)
+        .html("Medal: " + subgroupName + "<br>" + "Precentage of Medals: " + subgroupValue.toFixed(2) +"%")
         .style("opacity", 1)
   }
   var mousemove = function(d) {
