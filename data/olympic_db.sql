@@ -1,1 +1,0 @@
-select * from country_medal_stats;
