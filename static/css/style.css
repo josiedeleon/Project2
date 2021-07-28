@@ -17,10 +17,9 @@
 
 #heights{
 	height: 600px;
-    width: 400px;
+    width: 600px;
     border: 2px solid black;
     overflow: auto;
   	position: relative;
-  	margin-left: auto;
-  	margin-right: auto;
+
 }
