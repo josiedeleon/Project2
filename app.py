@@ -7,6 +7,8 @@ from sqlalchemy import create_engine, func
 
 from flask import Flask, jsonify
 
+from flask_cors import CORS
+
 ######################################################
 #  Database Set UP- (Standby)
 ######################################################
@@ -28,6 +30,8 @@ from flask import Flask, jsonify
 #  Flask Setup & Routes
 ######################################################
 app = Flask(__name__)
+CORS(app)
+
 
 @app.route("/")
 def welcome():
@@ -55,7 +59,7 @@ def welcome():
 
 @app.route("/api/v1.0/medals")
 def medals():
-    with open("./data/country_medal.csv", "r") as f:
+    with open("./data/Merged_Cleaned_Lat_Long.csv", "r") as f:
         reader = csv.DictReader(f)
         medal_list = list(reader)
         return jsonify(medal_list)
