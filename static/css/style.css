@@ -1,6 +1,8 @@
 #mapmedals {
     padding: 0;
     margin: 0;
+    margin-left: auto;
+  	margin-right: auto;
   }
 
 #participants{
@@ -9,7 +11,9 @@
     border: 2px solid black;
     overflow: auto;
   	position: relative;
-}
+  	margin-left: auto;
+  	margin-right: auto;
+  }
 
 #heights{
 	height: 600px;
@@ -17,4 +21,6 @@
     border: 2px solid black;
     overflow: auto;
   	position: relative;
+  	margin-left: auto;
+  	margin-right: auto;
 }
