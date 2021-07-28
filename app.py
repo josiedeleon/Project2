@@ -15,7 +15,6 @@ CORS(app)
 @app.route("/")
 def welcome():
     return (
-        f"Test, Test <br/>"
         f"/api/v1.0/medals <br/>"
         f"/api/v1.0/height_avg"
     )
