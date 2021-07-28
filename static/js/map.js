@@ -1,6 +1,8 @@
+// Use local flask API to get Medal and country data
 var local_flask = "http://127.0.0.1:5000//api/v1.0/medals";
 
 
+// Call/Response json data from local API
 d3.json(local_flask).then(function(response) {
   
     console.log(response[0]);
@@ -39,6 +41,7 @@ d3.json(local_flask).then(function(response) {
         shadowSize: [41, 41]
       });
 
+    // push gold, silver, and bronze data to respected arrays
     for (var i = 0; i < response.length; i++) {
         if (response[i].Gold_Medals > 0 ) {
             goldMedals.push(
@@ -91,10 +94,10 @@ d3.json(local_flask).then(function(response) {
 
     // Overlays that may be toggled on or off
     var overlayMaps = {
-    "Gold Medal Countries": cityLayerGold,
-    "Silver Medal Countries": cityLayerSilver,
-    "Bronze Medal Countries": cityLayerBronze,
-    "All Winning Countries": allCountryMedals
+    "Gold Medals": cityLayerGold,
+    "Silver Medal": cityLayerSilver,
+    "Bronze Medal": cityLayerBronze,
+    "Total Medals": allCountryMedals
   };
   
 
