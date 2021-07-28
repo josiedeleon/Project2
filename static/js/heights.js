@@ -1,13 +1,12 @@
-
 // Set up chart
-var svgWidth = 800;
-var svgHeight = 400;
+var svgWidth = 2000;
+var svgHeight = 500;
 
 var margin = {
-  top: 5,
-  right: 30,
-  bottom: 5,
-  left: 30
+  top: 20,
+  right: 40,
+  bottom: 60,
+  left: 10
 };
 
 var width = svgWidth - margin.left - margin.right;
@@ -22,7 +21,7 @@ var svg = d3
     .append("svg")
     .attr("width", "100%")
     .attr("height", "100%")
-    .attr("viewBox", [0,20, width,])
+    .attr("viewBox", `0 20 600 450`)
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")")
   .call(d3.zoom().on("zoom", function () {
@@ -50,7 +49,7 @@ d3.csv("/data/combined_height_avg.csv").then(function(hData) {
   // Set up the scales for the chart
   var xTimeScale = d3.scaleTime()
     .domain(d3.extent(hData, d => d.Year))
-    .range([0, width]);
+    .range([0,600]);
 
   var yLinearScale = d3.scaleLinear().range([height, 100]);
 
@@ -131,7 +130,6 @@ d3.csv("/data/combined_height_avg.csv").then(function(hData) {
 
 //Axis Titles
     chartGroup.append("text")
-    .attr("transform", `translate(${width / 2}, ${height + margin.top + 13})`)
     .attr("text-anchor", "middle")
     .attr("font-size", "18px")
     .attr("fill", "black")
