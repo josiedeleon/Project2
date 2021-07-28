@@ -1,12 +1,13 @@
+
 // Set up chart
-var svgWidth = 560;
-var svgHeight = 500;
+var svgWidth = 800;
+var svgHeight = 400;
 
 var margin = {
-  top: 20,
-  right: 40,
-  bottom: 60,
-  left: 50
+  top: 5,
+  right: 30,
+  bottom: 5,
+  left: 30
 };
 
 var width = svgWidth - margin.left - margin.right;
@@ -18,9 +19,16 @@ var height = svgHeight - margin.top - margin.bottom;
 
 var svg = d3
   .select("#heights")
-  .append("svg")
-  .attr("width", svgWidth)
-  .attr("height", svgHeight);
+    .append("svg")
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .attr("viewBox", [0,20, width,])
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")")
+  .call(d3.zoom().on("zoom", function () {
+    svg.attr("transform", d3.event.transform)
+ }))
+ .append("g");
 
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
@@ -60,7 +68,6 @@ d3.csv("/data/combined_height_avg.csv").then(function(hData) {
   else {
     yMax = femaleMax;
   }
-
 
   // Use the yMax value to set the yLinearScale domain
   yLinearScale.domain([160, yMax]);
@@ -120,6 +127,7 @@ d3.csv("/data/combined_height_avg.csv").then(function(hData) {
      .attr("fill", "yellow")
      .attr("stroke-width", "0.5")
      .attr("stroke", "black");
+
 
 //Axis Titles
     chartGroup.append("text")
