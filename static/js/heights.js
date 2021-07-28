@@ -17,8 +17,7 @@ var height = svgHeight - margin.top - margin.bottom;
 // and shift the latter by left and top margins.
 
 var svg = d3
-  .select("#heights")
-  .style("background-color", "#e5eeda")
+    .select("#heights")
     .append("svg")
     .attr("width", "100%")
     .attr("height", "100%")
@@ -34,7 +33,7 @@ var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 // Import data from the combined_height_avg.csv file
-d3.csv("/data/combined_height_avg.csv").then(function(hData) {
+d3.csv("data/combined_height_avg.csv").then(function(hData) {
 
 // Parse and convert to year values
   var parseTime = d3.timeParse("%Y");
