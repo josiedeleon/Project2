@@ -18,6 +18,7 @@ var height = svgHeight - margin.top - margin.bottom;
 
 var svg = d3
   .select("#heights")
+  .style("background-color", "#e5eeda")
     .append("svg")
     .attr("width", "100%")
     .attr("height", "100%")
@@ -126,7 +127,6 @@ d3.csv("/data/combined_height_avg.csv").then(function(hData) {
      .attr("fill", "yellow")
      .attr("stroke-width", "0.5")
      .attr("stroke", "black");
-
 
 //Axis Titles
     chartGroup.append("text")
